@@ -16,7 +16,7 @@ import
 func Main(text string){
 //reader := bufio.NewReader(os.Stdin) //creating a stdin 
 //text, err := reader.ReadString('\n') // reading input as string
-text = strings.TrimSuffix(text, "\n") //triming not needed suffix, so filepath will be read correctly
+text = strings.TrimSuffix(text, "\n") //trimming not needed suffix, so file path will be read correctly
 text = strings.TrimSuffix(text, "\r") 
 
 str := text
@@ -27,33 +27,33 @@ dir, err := ioutil.ReadDir(str)
 if err != nil{
     log.Fatal(err)
   }
-//dirName := filepath.Base(str)//getting the current dir name
+//dirName := filepath.Base(str)//getting the current directory name
  
-str= str + "/" //adding slash to the end so it could lead to the file 
+str= str + "/" //adding a slash to the end so it could lead to the file 
 
 
 
-for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it is the index)
+for _, f :=range dir { //loop over directory (the first part _ not needed because it is the index)
     fileName:=f.Name()
-	if!f.IsDir() && strings.HasSuffix(fileName,"T.xml"){ //checking that f is mot a directory and than making sure that the type of the file is "vm"
+	if!f.IsDir() && strings.HasSuffix(fileName,"T.xml"){ //checking that f is mot a directory and then making sure that the type of the file is "VM"
 	    
 		file,err := os.Open(str+f.Name())// open the TOKEN file for reading
 		reader := bufio.NewReaderSize(file,20000) // getting a file reader
 				
-		fileNoExt := strings.TrimSuffix(f.Name(),"T.xml")//we dont want the type of file because according to the hack langauage it is not needed 
+		fileNoExt := strings.TrimSuffix(f.Name(),"T.xml")//we don't want the type of file because according to the hack language it is not needed 
 		
 		/**creating xml file**/
 		
 		xmlName := fileNoExt +".xml"
-		file, err = os.Create(str + xmlName)// Create- creates a file for read and write
+		file, err = os.Create(str + xmlName)// Create- creates a file for reading and writing
         if err != nil{
            log.Fatal(err)
            }
-		wfile, _ := os.OpenFile(str+xmlName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to openf for appending so if we write new lines the previous wont be deleted
+		wfile, _ := os.OpenFile(str+xmlName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to open the file for appending so if we write new lines the previous won't be deleted
 
 		/***/
 		
-		if err == io.EOF {// making sure we are not in the end of file
+		if err == io.EOF {// making sure we are not at the end of the file
 				break
 		}
         ParseClass(reader ,wfile)
@@ -73,17 +73,17 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 
 /****getNextToken****/
 func getNextToken(reader *bufio.Reader) (string,*bufio.Reader){
-	line, _, _ := reader.ReadLine()//reads line by line the file 
-	s := string(line)// readeline returns []byte but we want the line format to be string
+	line, _, _ := reader.ReadLine()//reads the file  line by line 
+	s := string(line)// readeline returns []byte but we want the line format to be  a string
 	return s,reader
 	
 }
 
 /***func CheckNextToken***/
 func CheckNextToken (reader bufio.Reader,s1 string) bool{
-	line, _, _ := reader.ReadLine()//reads line by line the file line is [] byte
+	line, _, _ := reader.ReadLine()//reads line by line the file. line is []byte
 	s:= string(line)
-	s= strings.TrimSuffix(s, "\n") //triming not needed suffix, so filepath will be read correctly
+	s= strings.TrimSuffix(s, "\n") //trimming not needed suffix, so the file path will be read correctly
 	s= strings.TrimSuffix(s, "\r")
 	if(strings.Contains(s,s1)){
 		return true	
