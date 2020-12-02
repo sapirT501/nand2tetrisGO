@@ -20,7 +20,7 @@ var str string //declaring
 
 reader := bufio.NewReader(os.Stdin) //creating a stdin 
 text, err := reader.ReadString('\n') // reading input as string
-text = strings.TrimSuffix(text, "\n") //triming not needed suffix, so filepath will be read correctly
+text = strings.TrimSuffix(text, "\n") //trimming not needed suffix, so file path will be read correctly
 text = strings.TrimSuffix(text, "\r") 
 
 str = text
@@ -30,15 +30,15 @@ dir, err := ioutil.ReadDir(str)
 if err != nil{
     log.Fatal(err)
   }
-dirName := filepath.Base(str)//getting the current dir name
-asmName := dirName + ".asm" // the asm file needs to have the current dir name
-str= str + "/" //adding slash to the end so it could lead to the file 
+dirName := filepath.Base(str)//getting the current directory name
+asmName := dirName + ".asm" // the ASM file needs to have the current directory name
+str= str + "/" //adding a slash to the end so it could lead to the file 
 
-file, err := os.Create(str + asmName)// Create- creates a file for read and write
+file, err := os.Create(str + asmName)// Create- creates a file for reading and writing
 if err != nil{
     log.Fatal(err)
   }
-wfile, _ := os.OpenFile(str+asmName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to openf for appending so if we write new lines the previous wont be deleted
+wfile, _ := os.OpenFile(str+asmName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to open the file for appending so if we write new lines the previous won't be deleted
 for _,num :=range dir{
  if(num.Name() == "Sys.vm"){  
     wfile.WriteString("@256\nD=A\n@SP\nM=D\n")
@@ -47,19 +47,19 @@ for _,num :=range dir{
     wfile.WriteString("@SP\nD=M\n@5\nD=D-A\n@ARG\nM=D\n@SP\nD=M\n@LCL\nM=D\n@Sys.init\n0;JMP\n(Sys.init.returnAdd)\n")
     }
 }
-for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it is the index)
-    if!f.IsDir() && filepath.Ext(f.Name()) ==".vm"{ //checking that f is mot a directory and than making sure that the type of the file is "vm"
+for _, f :=range dir { //loop over directory (the first part _ not needed because it is the index)
+    if!f.IsDir() && filepath.Ext(f.Name()) ==".vm"{ //checking that f is mot a directory and then making sure that the type of the file is "VM"
 	    file,err = os.Open(str+f.Name())// open the vm file for reading
-		reader := bufio.NewReader(file) // getting a file reader
-		line, _, err := reader.ReadLine()//reads line by line the file 
-		s := string(line)// readeline returns []byte but we want the line format to be string
-		fileNoExt := strings.TrimSuffix(f.Name(),path.Ext(f.Name()))//we dont want the type of file because according to the hack langauage it is not needed 
-		if err == io.EOF {// making sure we are not in the end of file
+		reader := bufio.NewReader(file) //open the VM file for reading
+		line, _, err := reader.ReadLine()//reads the file line by line
+		s := string(line)// ReadeLine returns []byte but we want the line format to be a string
+		fileNoExt := strings.TrimSuffix(f.Name(),path.Ext(f.Name()))//we don't want the type of file because according to the hack language it is not needed 
+		if err == io.EOF {//making sure we are not at the end of the file
 				break
 		}
-		for err == nil{// if this is not null it means a line cant be read or we got to the end 
+		for err == nil{// if this is not null it means a line can't be read or we got to the end ds
 		  if strings.HasPrefix(s,"push"){//if the begging of the  string is "push"
-		    a:=strings.Fields(s)//transforms a string to array of strings according to space separator
+		    a:=strings.Fields(s)//transforms a string to an array of strings according to space separator
 			a = a[1:len(a)] //we want the new array to not contain the first argument
 			if(a[0]== "constant"){//if constant
 			   a = a[1:len(a)]
@@ -95,7 +95,7 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 			   a = a[1:len(a)]
 			   int,_ := strconv.Atoi(a[0])
 			   int = int+5
-			   wfile.WriteString("@"+strconv.Itoa(int))//Itoa converts int to string, the function writesrting  deals only with string type
+			   wfile.WriteString("@"+strconv.Itoa(int))//Itoa converts int to string, the function WriteSrting  deals only with string type
 			   wfile.WriteString("\nD=M\n@SP\nA=M\nM=D\n@SP\nM=M+1\n")
 			   }//end temp
 		  
@@ -262,7 +262,7 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 		  if strings.HasPrefix(s,"if-goto"){//if-goto
 		     a:=strings.Fields(s)
 			 a = a[1:len(a)]
-			 wfile.WriteString("\n@SP\nA=M-1\nD=M\n@SP\nM=M-1\n")//load the top stack to D and immidiately decressing SP beacause after JNE it is not possible
+			 wfile.WriteString("\n@SP\nA=M-1\nD=M\n@SP\nM=M-1\n")//load the top stack to D and immediately decreasing SP because after JNE it is not possible
 			 wfile.WriteString("@"+fileNoExt+"."+a[0])
 			 wfile.WriteString("\nD;JNE\n")  
 		  }		//end if-goto
@@ -321,13 +321,13 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 		    wfile.WriteString("@SP\nA=M-1\nD=M\nA=A-1\nM=M|D\n@SP\nM=M-1\n")
 		  }
 		  
-		  line, _,err = reader.ReadLine()// reader is stdin reader created with bufio labarary, ReadLine returns 3 values : array of byts , boolian that set if the buffer was small for the amount of data, and err type
+		  line, _,err = reader.ReadLine()// reader is stdin reader created with bufio library, ReadLine returns 3 values: an array of bytes , boolean that set if the buffer was small for the amount of data, and err type
 		  s = string(line) // converting the array of bytes to string
 		}
 		
     }
 	
- } // end of outer format
+ } // end of the outer format
  wfile.Close()
  }
 
