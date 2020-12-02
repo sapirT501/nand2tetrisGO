@@ -27,7 +27,7 @@ type Table struct {
 }
 func Main(text string){
 
-text = strings.TrimSuffix(text, "\n") //triming not needed suffix, so filepath will be read correctly
+text = strings.TrimSuffix(text, "\n") //trimming not needed suffix, so file path will be read correctly
 text = strings.TrimSuffix(text, "\r") 
 
 str := text
@@ -39,12 +39,12 @@ if err != nil{
   }
 
  
-str= str + "/" //adding slash to the end so it could lead to the file 
+str= str + "/" //adding a slash to the end so it could lead to the file 
 
 
-for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it is the index)
+for _, f :=range dir { //loop over directory (the first part _ not needed because it is the index)
     fileName:=f.Name()
-	if!f.IsDir() && strings.HasSuffix(fileName,"T.xml"){ //checking that f is mot a directory and than making sure that the type of the file is "vm"
+	if!f.IsDir() && strings.HasSuffix(fileName,"T.xml"){ //checking that f is not a directory and then making sure that the type of the file is "VM"
 	    if_index=-1
 		while_index=-1
 		fieldnum=0
@@ -58,15 +58,15 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 		/**creating xml file**/
 		
 		vmName := fileNoExt +".vm"
-		file, err = os.Create(str + vmName)// Create- creates a file for read and write
+		file, err = os.Create(str + vmName)// Create- creates a file for reading and writing
         if err != nil{
            log.Fatal(err)
            }
-		wfile, _ := os.OpenFile(str+vmName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to openf for appending so if we write new lines the previous wont be deleted
+		wfile, _ := os.OpenFile(str+vmName, os.O_WRONLY|os.O_APPEND, os.ModePerm)// we want to open the file for appending so if we write new lines the previous won't be deleted
 
 		/***/
 		
-		if err == io.EOF {// making sure we are not in the end of file
+		if err == io.EOF {// making sure we are not at the end of the file
 				break
 		}
         ParseClass(reader ,wfile)
@@ -85,17 +85,17 @@ for _, f :=range dir { //loop over dir (the first part _ not neaded beacause it 
 
 /****getNextToken****/
 func getNextToken(reader *bufio.Reader) (string,*bufio.Reader){
-	line, _, _ := reader.ReadLine()//reads line by line the file 
-	s := string(line)// readeline returns []byte but we want the line format to be string
+	line, _, _ := reader.ReadLine()//reads the file line by line 
+	s := string(line)// ReadeLine returns []byte but we want the line format to be a string
 	return s,reader
 	
 }
 
 /***func CheckNextToken***/
 func CheckNextToken (reader bufio.Reader,s1 string) bool{
-	line, _, _ := reader.ReadLine()//reads line by line the file line is [] byte
+	line, _, _ := reader.ReadLine()//reads line by line the file. line is []byte
 	s:= string(line)
-	s= strings.TrimSuffix(s, "\n") //triming not needed suffix, so filepath will be read correctly
+	s= strings.TrimSuffix(s, "\n") //trimming not needed suffix, so filepath will be read correctly
 	s= strings.TrimSuffix(s, "\r")
 	if(strings.Contains(s,s1)){
 		return true	
@@ -105,7 +105,7 @@ func CheckNextToken (reader bufio.Reader,s1 string) bool{
 
 /***func CheckNextToken2***/
 func CheckNextToken2 (reader bufio.Reader,s1 string) bool{
-	line, _, _ := reader.ReadLine()//reads line by line the file line is [] byte
+	line, _, _ := reader.ReadLine()//reads  the file line by line line is [] byte
 	s:= string(line)
 	line, _, _ = reader.ReadLine()//reads line by line the file line is [] byte
 	s= string(line)
@@ -256,7 +256,7 @@ func ParseSubDec(symbolClass [50]Table,fieldN int,reader *bufio.Reader ,wfile *o
 
 			 if(tipus=="method"){index=1}
 			_,reader=getNextToken(reader) //(
-			reader,wfile=ParameterList(symbolMethod,&index,&i,reader,wfile)//send table to collect parameter
+			reader,wfile=ParameterList(symbolMethod,&index,&i,reader,wfile)//send the table to collect parameter
 		
 			_,reader=getNextToken(reader)//)
 			 index=0
@@ -348,7 +348,7 @@ func SubRoutineBody(symbolClass [50]Table,tipus string,fieldN int,symbolMethod *
 }
 
 /***********varDec***********/
-//DONEEEEEEE//
+
 func varDec(symbolMethod *[20]Table,index *int,i *int,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File){
 		s:=""
 		tipus:=""
@@ -405,7 +405,7 @@ func varDec(symbolMethod *[20]Table,index *int,i *int,reader *bufio.Reader ,wfil
 }
 
 /***********statments***********/
-//DONEEEEEEE//
+
 func statements(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File){
 	
 	for(CheckNextToken((*reader),"let")|| CheckNextToken((*reader),">if<") || CheckNextToken((*reader),"else") || CheckNextToken((*reader),"while") || CheckNextToken((*reader),"do") || CheckNextToken((*reader),"return")){
@@ -417,7 +417,7 @@ func statements(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Read
 
 
 /***********statement***********/
-//DONEEEEEEE//
+
 func statement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File){
     if(CheckNextToken((*reader),"let")){
 	   reader,wfile=letStatement(symbolClass,symbolMethod,reader,wfile)
@@ -513,7 +513,7 @@ func letStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Re
 
 
 /***********ifStatement***********/
-//DONEEEEEEE//
+
 func ifStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File){	
 	
 	if(CheckNextToken((*reader),">if<")){
@@ -555,7 +555,7 @@ func ifStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Rea
 }
 
 /***********whileStatement***********/
-//DONEEEEEEE//
+
 func whileStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File) {	
 	
 	if(CheckNextToken((*reader),"while")){
@@ -588,7 +588,7 @@ func whileStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.
 
 
 /***********doStatement***********/
-//DONEEEEEEE//
+
 func doStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File) {	
 
 	if(CheckNextToken((*reader),"do")){
@@ -624,7 +624,7 @@ func ReturnStatement(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio
 
 
 /***********expression***********/
-//DONEEEEEEE//
+
 
 func expression(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File) {	
 
@@ -841,7 +841,7 @@ func term(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wf
 
 
 /***********subroutineCall***********/
-//DONEEEEEEE//
+
 func subroutineCall(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.Reader ,wfile *os.File) (*bufio.Reader,*os.File) {	
 		s:=""
 		param:=0
@@ -878,7 +878,7 @@ func subroutineCall(symbolClass [50]Table,symbolMethod *[20]Table,reader *bufio.
                if b.name == funcN {
                    insymb=true
 				   wfile.WriteString("push "+b.field+" "+strconv.Itoa(b.index)+"\n")
-				   funcN=b.tipus//if it is object we want the class name
+		                   funcN=b.tipus//if it is object we want (the class name)
 				   param1++
 				   break
                }
